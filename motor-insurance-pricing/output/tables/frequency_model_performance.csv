@@ -1,0 +1,3 @@
+model,n_parameters,AIC_train,poisson_deviance_test,deviance_reduction_pct
+Intercept only,1,176586,0.2579,0
+Final GLM,56,170609,0.24653,4.41

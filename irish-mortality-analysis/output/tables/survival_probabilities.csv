@@ -1,0 +1,6 @@
+"measure","male","female"
+"Newborn reaches 65",0.888,0.926
+"Newborn reaches 85",0.397,0.545
+"65-year-old reaches 85",0.447,0.588
+"65-year-old reaches 95",0.061,0.125
+"Median age at death (from birth)",82,86

@@ -1,0 +1,16 @@
+term,relativity,p_value
+(Intercept),1333,0
+"DrivAgeBand(17,20]",1.422,0.000208
+"DrivAgeBand(20,25]",0.9842,0.803
+"DrivAgeBand(25,30]",0.9674,0.537
+"DrivAgeBand(30,40]",0.9968,0.935
+"DrivAgeBand(50,60]",1.021,0.598
+"DrivAgeBand(60,70]",0.9771,0.651
+"DrivAgeBand(70,80]",1.187,0.008
+"DrivAgeBand(80,Inf]",0.9477,0.678
+"VehAgeBand(-1,0]",1.167,0.0197
+"VehAgeBand(0,2]",1.105,0.0116
+"VehAgeBand(2,5]",1.034,0.376
+"VehAgeBand(10,15]",0.9957,0.906
+"VehAgeBand(15,Inf]",0.9312,0.218
+BonusMalusC,1.003,0.000318
