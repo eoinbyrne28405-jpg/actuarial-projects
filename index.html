@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Actuarial Projects</title>
+<meta name="description" content="Three actuarial projects in R: claims reserving, motor insurance pricing and Irish mortality analysis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbfaf7; --surface: #ffffff; --ink: #1c1f24; --muted: #5d6470;
+    --line: #e4e1da; --accent: #1f4e79; --accent-soft: #e8eef5;
+    --max: 1040px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14161a; --surface: #1c1f25; --ink: #e9e7e2; --muted: #a2a8b3;
+            --line: #2d3139; --accent: #8fb6dd; --accent-soft: #23303e; }
+    figure img { background: #fff; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 16px/1.6 Inter, system-ui, sans-serif; }
+  a { color: var(--accent); }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+  header { padding: 72px 0 40px; border-bottom: 1px solid var(--line); }
+  .eyebrow { font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+             color: var(--muted); font-weight: 600; margin: 0 0 12px; }
+  h1 { font-family: "Source Serif 4", Georgia, serif; font-weight: 600;
+       font-size: clamp(34px, 6vw, 52px); line-height: 1.1; margin: 0 0 16px; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 680px; margin: 0; }
+  nav.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  nav.jump a { text-decoration: none; font-size: 14px; font-weight: 500;
+               padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px;
+               color: var(--ink); background: var(--surface); }
+  nav.jump a:hover { border-color: var(--accent); color: var(--accent); }
+
+  section.project { padding: 64px 0; border-bottom: 1px solid var(--line); }
+  .num { font-family: "Source Serif 4", Georgia, serif; color: var(--accent);
+         font-size: 15px; margin: 0 0 6px; }
+  h2 { font-family: "Source Serif 4", Georgia, serif; font-weight: 600;
+       font-size: clamp(26px, 4vw, 34px); line-height: 1.2; margin: 0 0 8px; }
+  .tags { font-size: 13px; color: var(--muted); margin: 0 0 20px; }
+  .summary { max-width: 720px; margin: 0 0 28px; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+           gap: 12px; margin: 0 0 32px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+          padding: 16px 18px; }
+  .stat b { display: block; font-family: "Source Serif 4", Georgia, serif;
+            font-size: 28px; font-weight: 600; line-height: 1.15; }
+  .stat span { font-size: 13.5px; color: var(--muted); }
+
+  .figs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .figs figure.wide { grid-column: 1 / -1; }
+  figure { margin: 0; background: var(--surface); border: 1px solid var(--line);
+           border-radius: 10px; padding: 12px; }
+  figure img { width: 100%; height: auto; display: block; border-radius: 4px; }
+  figcaption { font-size: 13.5px; color: var(--muted); padding: 10px 4px 2px; }
+
+  .table-wrap { overflow-x: auto; margin: 28px 0 0; background: var(--surface);
+                border: 1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px;
+          font-variant-numeric: tabular-nums; }
+  th, td { padding: 9px 14px; text-align: right; border-bottom: 1px solid var(--line);
+           white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  th { font-weight: 600; font-size: 12.5px; color: var(--muted);
+       text-transform: uppercase; letter-spacing: .04em; }
+  tr:last-child td { border-bottom: 0; }
+  tr.total td { font-weight: 600; background: var(--accent-soft); }
+
+  .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .btn { text-decoration: none; font-weight: 500; font-size: 14.5px; padding: 10px 16px;
+         border-radius: 8px; border: 1px solid var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--bg); }
+  .btn.secondary { color: var(--accent); }
+
+  footer { padding: 40px 0 64px; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 720px) {
+    header { padding: 48px 0 32px; }
+    section.project { padding: 44px 0; }
+    .figs { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Portfolio · R</p>
+    <h1>Actuarial Projects</h1>
+    <p class="lede">Three projects on real data covering the main areas of actuarial work: how much to reserve for claims already incurred, how to price motor insurance by risk, and what Irish mortality means for life insurance and pensions.</p>
+    <nav class="jump" aria-label="Projects">
+      <a href="#reserving">1 · Claims reserving</a>
+      <a href="#pricing">2 · Motor pricing</a>
+      <a href="#mortality">3 · Irish mortality</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="project" id="reserving">
+  <div class="wrap">
+    <p class="num">01</p>
+    <h2>Insurance claims reserving with the chain ladder</h2>
+    <p class="tags">General insurance · ChainLadder · Mack model · Bootstrap</p>
+    <p class="summary">Using the RAA general liability triangle (1981–1990), I projected each accident year's claims to their final cost with the chain ladder. I then measured the uncertainty in the reserve with Mack standard errors and a 5,000-simulation over-dispersed Poisson bootstrap.</p>
+
+    <div class="stats">
+      <div class="stat"><b>$52.1m</b><span>Best-estimate reserve, on $161.0m reported</span></div>
+      <div class="stat"><b>$26.9m</b><span>Mack standard error (CV 52%)</span></div>
+      <div class="stat"><b>$116.4m</b><span>99.5th percentile of bootstrapped reserve</span></div>
+      <div class="stat"><b>31%</b><span>Share of reserve from 1990 alone</span></div>
+    </div>
+
+    <div class="figs">
+      <figure class="wide">
+        <img src="chain-ladder-reserving/output/figures/bootstrap_reserve_distribution.png" alt="Histogram of bootstrapped total reserve, right-skewed with mean around 54 million and 99.5th percentile at 116 million" loading="lazy">
+        <figcaption>The reserve distribution is right-skewed, so the bad tail is longer than a symmetric interval suggests.</figcaption>
+      </figure>
+      <figure>
+        <img src="chain-ladder-reserving/output/figures/development_curves.png" alt="Cumulative claims development curves by accident year, observed and projected" loading="lazy">
+        <figcaption>Observed (filled) and projected (hollow) claims development.</figcaption>
+      </figure>
+      <figure>
+        <img src="chain-ladder-reserving/output/figures/mack_reserve_intervals.png" alt="Reserve by accident year with 95 percent Mack error bars" loading="lazy">
+        <figcaption>Reserve by accident year with approximate 95% Mack intervals.</figcaption>
+      </figure>
+      <figure>
+        <img src="chain-ladder-reserving/output/figures/link_ratio_heatmap.png" alt="Heatmap of individual age-to-age development factors" loading="lazy">
+        <figcaption>Individual age-to-age factors. The 1–2 column is very unstable.</figcaption>
+      </figure>
+      <figure>
+        <img src="chain-ladder-reserving/output/figures/ultimate_vs_latest.png" alt="Stacked bars of claims emerged to date and reserve by accident year" loading="lazy">
+        <figcaption>Ultimate claims split into emerged-to-date and still to emerge.</figcaption>
+      </figure>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Accident year</th><th>Latest</th><th>Factor to ultimate</th><th>Ultimate</th><th>Reserve</th><th>Mack SE</th></tr></thead>
+        <tbody>
+          <tr><td>1981</td><td>18,834</td><td>1.000</td><td>18,834</td><td>0</td><td>0</td></tr>
+          <tr><td>1982</td><td>16,704</td><td>1.009</td><td>16,858</td><td>154</td><td>206</td></tr>
+          <tr><td>1983</td><td>23,466</td><td>1.026</td><td>24,083</td><td>617</td><td>623</td></tr>
+          <tr><td>1984</td><td>27,067</td><td>1.060</td><td>28,703</td><td>1,636</td><td>747</td></tr>
+          <tr><td>1985</td><td>26,180</td><td>1.105</td><td>28,927</td><td>2,747</td><td>1,469</td></tr>
+          <tr><td>1986</td><td>15,852</td><td>1.230</td><td>19,501</td><td>3,649</td><td>2,002</td></tr>
+          <tr><td>1987</td><td>12,314</td><td>1.441</td><td>17,749</td><td>5,435</td><td>2,209</td></tr>
+          <tr><td>1988</td><td>13,112</td><td>1.832</td><td>24,019</td><td>10,907</td><td>5,358</td></tr>
+          <tr><td>1989</td><td>5,395</td><td>2.974</td><td>16,045</td><td>10,650</td><td>6,333</td></tr>
+          <tr><td>1990</td><td>2,063</td><td>8.920</td><td>18,402</td><td>16,339</td><td>24,566</td></tr>
+          <tr class="total"><td>Total ($000s)</td><td>160,987</td><td></td><td>213,121</td><td>52,134</td><td>26,909</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="links">
+      <a class="btn primary" href="chain-ladder-reserving/">Read the full write-up</a>
+      <a class="btn secondary" href="https://github.com/eoinbyrne28405-jpg/actuarial-projects/tree/main/chain-ladder-reserving">View the R code</a>
+    </div>
+  </div>
+</section>
+
+<section class="project" id="pricing">
+  <div class="wrap">
+    <p class="num">02</p>
+    <h2>Motor insurance pricing with GLMs</h2>
+    <p class="tags">Non-life pricing · Poisson GLM · Gamma GLM · 678,000 policies</p>
+    <p class="summary">On the French motor third-party liability dataset, a Poisson GLM predicts how often each driver claims and a Gamma GLM predicts how much each claim costs. Multiplying the two gives a risk-based pure premium for every policy. Both models are validated on a 20% held-out test set.</p>
+
+    <div class="stats">
+      <div class="stat"><b>5.6×</b><span>Claim rate of riskiest vs safest 10% (test set)</span></div>
+      <div class="stat"><b>3.9×</b><span>Frequency at bonus-malus 100 vs 50</span></div>
+      <div class="stat"><b>€179</b><span>Average pure premium per policy-year</span></div>
+      <div class="stat"><b>0.999</b><span>Predicted / actual cost, capped claims (train)</span></div>
+    </div>
+
+    <div class="figs">
+      <figure class="wide">
+        <img src="motor-insurance-pricing/output/figures/frequency_lift_chart.png" alt="Lift chart: observed and predicted claim frequency by predicted decile, lines closely aligned" loading="lazy">
+        <figcaption>Test-set lift chart: predicted and observed frequency agree across all ten risk deciles.</figcaption>
+      </figure>
+      <figure>
+        <img src="motor-insurance-pricing/output/figures/bonus_malus_frequency.png" alt="Claim frequency rising with bonus-malus level" loading="lazy">
+        <figcaption>Bonus-malus is the strongest single predictor.</figcaption>
+      </figure>
+      <figure>
+        <img src="motor-insurance-pricing/output/figures/relativities_driver_age.png" alt="Driver age frequency relativities with confidence intervals" loading="lazy">
+        <figcaption>Driver age relativities, after allowing for bonus-malus.</figcaption>
+      </figure>
+      <figure>
+        <img src="motor-insurance-pricing/output/figures/oneway_frequency.png" alt="One-way claim frequency by rating factor" loading="lazy">
+        <figcaption>One-way frequencies by rating factor.</figcaption>
+      </figure>
+      <figure>
+        <img src="motor-insurance-pricing/output/figures/claim_size_distribution.png" alt="Histogram of claim amounts on log scale with cap marked" loading="lazy">
+        <figcaption>Claim sizes are heavy-tailed. Claims are capped at €34,400.</figcaption>
+      </figure>
+      <figure>
+        <img src="motor-insurance-pricing/output/figures/pure_premium_lift.png" alt="Actual vs predicted pure premium by decile" loading="lazy">
+        <figcaption>Pure premium lift on the test set.</figcaption>
+      </figure>
+      <figure>
+        <img src="motor-insurance-pricing/output/figures/relativities_vehicle_age.png" alt="Vehicle age frequency relativities" loading="lazy">
+        <figcaption>Older vehicles claim less often.</figcaption>
+      </figure>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Example customer</th><th>Frequency</th><th>Severity</th><th>Pure premium</th></tr></thead>
+        <tbody>
+          <tr><td>Age 19, new high-power car, Paris area, BM 100</td><td>0.391</td><td>€3,982</td><td>€1,556</td></tr>
+          <tr><td>Age 45, 8-year-old diesel, rural Brittany, BM 50</td><td>0.060</td><td>€2,069</td><td>€125</td></tr>
+          <tr><td>Age 72, 3-year-old car, mid-size town, BM 50</td><td>0.070</td><td>€2,540</td><td>€178</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="links">
+      <a class="btn primary" href="motor-insurance-pricing/">Read the full write-up</a>
+      <a class="btn secondary" href="https://github.com/eoinbyrne28405-jpg/actuarial-projects/tree/main/motor-insurance-pricing">View the R code</a>
+    </div>
+  </div>
+</section>
+
+<section class="project" id="mortality">
+  <div class="wrap">
+    <p class="num">03</p>
+    <h2>Irish life expectancy and mortality</h2>
+    <p class="tags">Life insurance · CSO Irish Life Tables No. 17 · Gompertz–Makeham · Annuities</p>
+    <p class="summary">From the CSO's official 2015–2017 life table, I built full life tables by sex, fitted the Gompertz and Makeham laws of mortality by Poisson maximum likelihood, and priced term life cover and lifetime pensions from first principles.</p>
+
+    <div class="stats">
+      <div class="stat"><b>79.6 / 83.4</b><span>Life expectancy at birth, male / female</span></div>
+      <div class="stat"><b>~6 years</b><span>Time for adult mortality to double</span></div>
+      <div class="stat"><b>€140k</b><span>Cost at 65 of €10k a year for life (male, 3%)</span></div>
+      <div class="stat"><b>+42%</b><span>Pension cost if interest falls from 5% to 1%</span></div>
+    </div>
+
+    <div class="figs">
+      <figure class="wide">
+        <img src="irish-mortality-analysis/output/figures/mortality_rates_log.png" alt="Irish mortality rates by age and sex on log scale" loading="lazy">
+        <figcaption>Irish mortality by age (log scale): infant mortality, the late-teen rise for males, then near-exponential growth.</figcaption>
+      </figure>
+      <figure>
+        <img src="irish-mortality-analysis/output/figures/survival_curves.png" alt="Survival curves for males and females" loading="lazy">
+        <figcaption>Survivors out of 100,000 births.</figcaption>
+      </figure>
+      <figure>
+        <img src="irish-mortality-analysis/output/figures/gompertz_fit.png" alt="Gompertz and Makeham fits to adult mortality" loading="lazy">
+        <figcaption>Gompertz (solid) and Makeham (dashed) fits, ages 40–90.</figcaption>
+      </figure>
+      <figure>
+        <img src="irish-mortality-analysis/output/figures/gompertz_residuals.png" alt="Residuals of Gompertz and Makeham fits" loading="lazy">
+        <figcaption>Makeham fixes most of the Gompertz misfit for men.</figcaption>
+      </figure>
+      <figure>
+        <img src="irish-mortality-analysis/output/figures/curve_of_deaths.png" alt="Distribution of age at death" loading="lazy">
+        <figcaption>Distribution of age at death. The most common age is 86 for men and 89 for women.</figcaption>
+      </figure>
+      <figure>
+        <img src="irish-mortality-analysis/output/figures/annuity_values.png" alt="Annuity values by age at three interest rates" loading="lazy">
+        <figcaption>Value of a lifetime annuity by age and interest rate.</figcaption>
+      </figure>
+      <figure>
+        <img src="irish-mortality-analysis/output/figures/pension_cost_vs_interest.png" alt="Pension cost against interest rate" loading="lazy">
+        <figcaption>Cost of a €10k a year pension at 65 against interest rate.</figcaption>
+      </figure>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Life expectancy at age</th><th>Male</th><th>Female</th><th>Gap</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>79.6</td><td>83.4</td><td>3.8</td></tr>
+          <tr><td>20</td><td>60.1</td><td>63.8</td><td>3.7</td></tr>
+          <tr><td>40</td><td>40.8</td><td>44.1</td><td>3.3</td></tr>
+          <tr><td>65</td><td>18.3</td><td>21.0</td><td>2.7</td></tr>
+          <tr><td>80</td><td>7.9</td><td>9.4</td><td>1.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="links">
+      <a class="btn primary" href="irish-mortality-analysis/">Read the full write-up</a>
+      <a class="btn secondary" href="https://github.com/eoinbyrne28405-jpg/actuarial-projects/tree/main/irish-mortality-analysis">View the R code</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    All analysis in R. Data: R ChainLadder package (RAA), CASdatasets (freMTPL2), Central Statistics Office Ireland (Irish Life Tables No. 17).
+    · <a href="https://github.com/eoinbyrne28405-jpg/actuarial-projects">Repository on GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
